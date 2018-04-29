@@ -1,0 +1,1 @@
+xbip_dsp48_macro_1.vhd,vhdl,xil_defaultlib,../../../../dcgan.srcs/sources_1/ip/xbip_dsp48_macro_1/sim/xbip_dsp48_macro_1.vhd,

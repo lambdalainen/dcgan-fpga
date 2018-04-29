@@ -4,15 +4,17 @@
 //#   dd      - <dd> is byte to be written at Mem(aaaaaa++) (aaaaaa is incremented at every load)
 //#
 //#   only first 1-7 columns are loaded. NO empty lines !!!!!!!!!!!!!!!!
+//#
+//# The first 8 bytes are weight tensor for testing transconv
 @000000
 01
 02
 03
 04
-05
-06
-07
-08
+01
+02
+03
+04
 09
 0A
 0B

@@ -11,77 +11,109 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="644000000001fs"></ZoomEndTime>
-      <Cursor1Time time="500000000000fs"></Cursor1Time>
+      <ZoomStartTime time="301481743000fs"></ZoomStartTime>
+      <ZoomEndTime time="301612943001fs"></ZoomEndTime>
+      <Cursor1Time time="301319343000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="155"></NameColumnWidth>
-      <ValueColumnWidth column_width="114"></ValueColumnWidth>
+      <ValueColumnWidth column_width="102"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="16" />
+   <WVObjectSize size="24" />
    <wvobject type="logic" fp_name="/top_tb/clk">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_tb/reset">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_tb/btn_tick">
+      <obj_property name="ElementShortName">btn_tick</obj_property>
+      <obj_property name="ObjectShortName">btn_tick</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_tb/read_spi_tick">
+      <obj_property name="ElementShortName">read_spi_tick</obj_property>
+      <obj_property name="ObjectShortName">read_spi_tick</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/state">
+      <obj_property name="ElementShortName">state[2:0]</obj_property>
+      <obj_property name="ObjectShortName">state[2:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/load_byte">
+      <obj_property name="ElementShortName">load_byte[1:0]</obj_property>
+      <obj_property name="ObjectShortName">load_byte[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/weight_bytes_loaded">
+      <obj_property name="ElementShortName">weight_bytes_loaded[17:0]</obj_property>
+      <obj_property name="ObjectShortName">weight_bytes_loaded[17:0]</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/top_tb/i_wb_cyc">
       <obj_property name="ElementShortName">i_wb_cyc</obj_property>
       <obj_property name="ObjectShortName">i_wb_cyc</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/i_wb_data_stb">
-      <obj_property name="ElementShortName">i_wb_data_stb</obj_property>
-      <obj_property name="ObjectShortName">i_wb_data_stb</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/i_wb_ctrl_stb">
-      <obj_property name="ElementShortName">i_wb_ctrl_stb</obj_property>
-      <obj_property name="ObjectShortName">i_wb_ctrl_stb</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/i_wb_we">
-      <obj_property name="ElementShortName">i_wb_we</obj_property>
-      <obj_property name="ObjectShortName">i_wb_we</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/top_tb/i_wb_addr">
-      <obj_property name="ElementShortName">i_wb_addr[19:0]</obj_property>
-      <obj_property name="ObjectShortName">i_wb_addr[19:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/top_tb/i_wb_data">
-      <obj_property name="ElementShortName">i_wb_data[31:0]</obj_property>
-      <obj_property name="ObjectShortName">i_wb_data[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/o_wb_ack">
-      <obj_property name="ElementShortName">o_wb_ack</obj_property>
-      <obj_property name="ObjectShortName">o_wb_ack</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/o_wb_stall">
-      <obj_property name="ElementShortName">o_wb_stall</obj_property>
-      <obj_property name="ObjectShortName">o_wb_stall</obj_property>
-   </wvobject>
    <wvobject type="array" fp_name="/top_tb/o_wb_data">
       <obj_property name="ElementShortName">o_wb_data[31:0]</obj_property>
       <obj_property name="ObjectShortName">o_wb_data[31:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/o_qspi_sck">
-      <obj_property name="ElementShortName">o_qspi_sck</obj_property>
-      <obj_property name="ObjectShortName">o_qspi_sck</obj_property>
+   <wvobject type="array" fp_name="/top_tb/addr_bw">
+      <obj_property name="ElementShortName">addr_bw[15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_bw[15:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/o_qspi_cs_n">
-      <obj_property name="ElementShortName">o_qspi_cs_n</obj_property>
-      <obj_property name="ObjectShortName">o_qspi_cs_n</obj_property>
+   <wvobject type="array" fp_name="/top_tb/bw">
+      <obj_property name="ElementShortName">bw[7:0]</obj_property>
+      <obj_property name="ObjectShortName">bw[7:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/top_tb/o_qspi_mod">
-      <obj_property name="ElementShortName">o_qspi_mod[1:0]</obj_property>
-      <obj_property name="ObjectShortName">o_qspi_mod[1:0]</obj_property>
+   <wvobject type="logic" fp_name="/top_tb/we_b">
+      <obj_property name="ElementShortName">we_b</obj_property>
+      <obj_property name="ObjectShortName">we_b</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/top_tb/o_qspi_dat">
-      <obj_property name="ElementShortName">o_qspi_dat[3:0]</obj_property>
-      <obj_property name="ObjectShortName">o_qspi_dat[3:0]</obj_property>
+   <wvobject type="logic" fp_name="/top_tb/start_tick">
+      <obj_property name="ElementShortName">start_tick</obj_property>
+      <obj_property name="ObjectShortName">start_tick</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/top_tb/i_qspi_dat">
-      <obj_property name="ElementShortName">i_qspi_dat[3:0]</obj_property>
-      <obj_property name="ObjectShortName">i_qspi_dat[3:0]</obj_property>
+   <wvobject type="logic" fp_name="/top_tb/done_tick">
+      <obj_property name="ElementShortName">done_tick</obj_property>
+      <obj_property name="ObjectShortName">done_tick</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/o_interrupt">
-      <obj_property name="ElementShortName">o_interrupt</obj_property>
-      <obj_property name="ObjectShortName">o_interrupt</obj_property>
+   <wvobject type="array" fp_name="/top_tb/addr_ar">
+      <obj_property name="ElementShortName">addr_ar[15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_ar[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/addr_br">
+      <obj_property name="ElementShortName">addr_br[15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_br[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/addr_c">
+      <obj_property name="ElementShortName">addr_c[15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_c[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/a">
+      <obj_property name="ElementShortName">a[7:0]</obj_property>
+      <obj_property name="ObjectShortName">a[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/b">
+      <obj_property name="ElementShortName">b[7:0]</obj_property>
+      <obj_property name="ObjectShortName">b[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/c">
+      <obj_property name="ElementShortName">c[31:0]</obj_property>
+      <obj_property name="ObjectShortName">c[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/cw">
+      <obj_property name="ElementShortName">cw[31:0]</obj_property>
+      <obj_property name="ObjectShortName">cw[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_tb/we_c">
+      <obj_property name="ElementShortName">we_c</obj_property>
+      <obj_property name="ObjectShortName">we_c</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/addr_result">
+      <obj_property name="ElementShortName">addr_result[15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_result[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/result">
+      <obj_property name="ElementShortName">result[31:0]</obj_property>
+      <obj_property name="ObjectShortName">result[31:0]</obj_property>
    </wvobject>
 </wave_config>
