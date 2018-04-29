@@ -18,6 +18,7 @@ reg [17:0] weight_bytes_loaded = 18'd0;
 
 // Wishbone inputs
 reg i_wb_cyc = 1'b0, i_wb_data_stb = 1'b0;
+reg [19:0] i_wb_addr = 20'd0;
 // Wishbone outputs
 wire o_wb_ack;
 wire o_wb_stall;
@@ -65,7 +66,7 @@ wbqspiflash wbqspiflash_unit(.i_clk(clk),
 		.i_wb_data_stb(i_wb_data_stb), // Wishbone strobe, when the access is to the data memory
 		.i_wb_ctrl_stb(1'b0), // Wishbone strobe, for when the access is to one of control registers
 		.i_wb_we(1'b0), // Wishbone write enable, indicating a write interaction to the bus
-		.i_wb_addr(20'd0), // Wishbone address. When accessing control registers, only the bottom two bits are relevant
+		.i_wb_addr(i_wb_addr), // Wishbone address. When accessing control registers, only the bottom two bits are relevant
 		.i_wb_data(32'd0), // Wishbone bus data register
 		// Wishbone return values
 		.o_wb_ack(o_wb_ack), // Acknowledging a wishbone write, or signifying valid data of a wishbone read
@@ -138,6 +139,7 @@ begin
                             begin
                                 state <= idle;
                                 read_spi_tick <= 1'b1;
+                                i_wb_addr <= i_wb_addr + 1; // not +4!
                             end
                     end
             end
