@@ -308,7 +308,7 @@ begin
                 i_saved_next = i;
                 j_saved_next = j;
                 a_rd_addr_next = i;
-                b_rd_addr_next = j;
+                b_rd_addr_next = j * k;
             end
         pick: // 2
             begin
@@ -469,14 +469,14 @@ xbip_dsp48_macro_0 dsp48_a_rd_addr (
   .P(a_rd_addr_p)
 );
 
-// b_rd_addr_next = l_next * n + j_saved;
+// b_rd_addr_next = j_saved * k + l_next;
 xbip_dsp48_macro_0 dsp48_b_rd_addr (
   .CLK(clk),
   .SEL(2'd2),
   .PCIN(48'd0),
-  .A({4'd0, l_next}),
-  .B({4'd0, n}),
-  .C({18'd0, j_saved}),
+  .A({4'd0, j_saved}),
+  .B({4'd0, k}),
+  .C({18'd0, l_next}),
   .PCOUT(),
   .P(b_rd_addr_p)
 );
