@@ -18,6 +18,8 @@ module transconv
     input wire [MKN_WIDTH-1:0] k,
     input wire [MKN_WIDTH-1:0] n,
     input wire [N_OUT_PLANE_WIDTH-1:0] n_output_plane,
+    input wire [N_OUT_PLANE_WIDTH-1:0] output_plane_start,
+    input wire [N_OUT_PLANE_WIDTH-1:0] output_plane_batch_size,
     input wire [INOUT_WH_WIDTH-1:0] output_h,
     input wire [INOUT_WH_WIDTH-1:0] output_w,
     input wire [INOUT_WH_WIDTH-1:0] input_h,
@@ -228,10 +230,10 @@ begin
                         // No need to set a_rd_addr_next, ...
 
                         i_next = 0;
-                        j_next = 0;
+                        j_next = output_plane_start * 4;
                         l_next = 0;
 
-                        c_im_next = 0;
+                        c_im_next = output_plane_start;
                         h_offset_next = 0;
                         w_offset_next = 0;
                         h_col_next = 0;
@@ -309,6 +311,9 @@ begin
                 j_saved_next = j;
                 a_rd_addr_next = i;
                 b_rd_addr_next = j * k;
+
+                if (i == m - 1 && j == (output_plane_start + output_plane_batch_size) * 4 - 1)
+                    last_next = 1'b1;
             end
         pick: // 2
             begin

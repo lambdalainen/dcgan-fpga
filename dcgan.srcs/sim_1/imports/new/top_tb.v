@@ -15,6 +15,7 @@ reg btn_tick = 1'b0, read_spi_tick = 1'b0;
 reg [2:0] state = idle;
 reg [1:0] load_byte = 2'b00;
 reg [17:0] weight_bytes_loaded = 18'd0;
+reg [9:0] output_plane_start = 10'd0;
 
 // Wishbone inputs
 reg i_wb_cyc = 1'b0, i_wb_data_stb = 1'b0;
@@ -53,8 +54,9 @@ bram #(.ADDR_WIDTH(16), .DATA_WIDTH(32)) bram_c
 
 // TODO: pass constants as parameters?
 transconv tc_unit
-    (.clk(clk), .reset(reset), .start_tick(start_tick), .m(14'd9), .k(14'd2), .n(14'd4),
-     .n_output_plane(10'd1), .output_h(7'd4), .output_w(7'd4), .input_h(7'd3), .input_w(7'd3),
+    (.clk(clk), .reset(reset), .start_tick(start_tick), .m(14'd9), .k(14'd2), .n(14'd8),
+     .n_output_plane(10'd2), .output_plane_start(output_plane_start), .output_plane_batch_size(10'd1),
+     .output_h(7'd4), .output_w(7'd4), .input_h(7'd3), .input_w(7'd3),
      .kernel_h(3'd2), .kernel_w(3'd2), .pad_h(3'd1), .pad_w(3'd1),
      .stride_h(3'd2), .stride_w(3'd2), .dilation_h(3'd1), .dilation_w(3'd1), .a(a), .b(b), .c(c),
      .a_rd_addr(addr_ar), .b_rd_addr(addr_br), .c_rw_addr(addr_c), .c_out(cw), .c_wr_en(we_c),
@@ -130,9 +132,10 @@ begin
 
                 if (load_byte == 3) // finished the 4 bytes
                     begin
-                        if (weight_bytes_loaded == 8) // finished loading weights
+                        if (weight_bytes_loaded == 8) // finished loading weights for this batch
                             begin
                                 state <= exec;
+                                weight_bytes_loaded <= 0;
                                 start_tick <= 1'b1;
                             end
                         else // keep loading weights
@@ -149,6 +152,12 @@ begin
                 if (done_tick)
                     begin
                         state <= idle;
+                        if (output_plane_start < 1)
+                            begin
+                                output_plane_start <= output_plane_start + 1;
+                                read_spi_tick <= 1'b1;
+                                i_wb_addr <= i_wb_addr + 1; // not +4!
+                            end
                     end
             end
     endcase
@@ -179,9 +188,12 @@ begin
     btn_tick = 1'b1;
     @(negedge clk);
     btn_tick = 1'b0;
-    
+
     wait(done_tick);
-    for (i = 0; i < 15; i = i+1) begin
+    repeat(2) @(negedge clk);
+    wait(done_tick);
+
+    for (i = 0; i < 31; i = i+1) begin
         @(negedge clk);
         addr_result = addr_result + 1;
     end
