@@ -51,6 +51,9 @@ localparam [2:0]
     macc = 3'b011,
     done = 3'b100;
 
+wire [MISC_WIDTH*2-1:0] kh_x_kw = kernel_h * kernel_w;
+wire [MKN_WIDTH-1:0] j_max = (output_plane_start + output_plane_batch_size) * kh_x_kw - 1;
+
 reg [2:0] state, state_next;
 reg [ADDR_WIDTH-1:0] a_rd_addr_reg, a_rd_addr_next;
 reg [ADDR_WIDTH-1:0] b_rd_addr_reg, b_rd_addr_next;
@@ -230,7 +233,7 @@ begin
                         // No need to set a_rd_addr_next, ...
 
                         i_next = 0;
-                        j_next = output_plane_start * 4;
+                        j_next = output_plane_start * kh_x_kw;
                         l_next = 0;
 
                         c_im_next = output_plane_start;
@@ -312,7 +315,7 @@ begin
                 a_rd_addr_next = i;
                 b_rd_addr_next = j * k;
 
-                if (i == m - 1 && j == (output_plane_start + output_plane_batch_size) * 4 - 1)
+                if (i == m - 1 && j == j_max)
                     last_next = 1'b1;
             end
         pick: // 2
