@@ -5,9 +5,11 @@ module top_tb();
 localparam T = 10000; // 100MHz = 10ns period
 
 localparam [2:0]
-    idle = 3'b000,
-    load = 3'b001,
-    exec = 3'b010;
+    idle      = 3'b000,
+    col_vec   = 3'b001,
+    wait_spi  = 3'b010,
+    load_spi  = 3'b011,
+    transconv = 3'b100;
 
 reg clk, reset;
 reg btn_tick = 1'b0, read_spi_tick = 1'b0;
@@ -32,35 +34,56 @@ wire [3:0] i_qspi_dat;
 // interrupt
 wire o_interrupt;
 
-// bram & transconv
+// row_vec & col_vec
+wire [12:0] addr_rv0;
+wire [9:0] addr_cv0, addr_cv1;
+wire we_cv;
+wire [31:0] rv0, cvw, cv1;
+wire [7:0] a0, b0;
+reg cv_start_tick = 1'b0;
+wire cv_done_tick;
+
+// transconv
 reg we_a = 1'b0, we_b = 1'b0;
 wire we_c; // we can't write 'wire we_c = 1'b0;' or 'we_c' will be tied to GND
-reg [15:0] addr_aw = 16'd0, addr_bw = 16'hffff, addr_result = 16'd0;
-wire [15:0] addr_ar, addr_br, addr_c;
+reg [15:0] addr_b0 = 16'hffff, addr_c1 = 16'd0;
+wire [15:0] addr_a0, addr_a1, addr_b1, addr_c0;
 reg [7:0] aw = 8'd0, bw = 8'd0;
-wire [7:0] a, b;
-wire [31:0] c, cw, result;
-reg start_tick = 1'b0;
-wire done_tick;
+wire [7:0] a1, b1;
+wire [31:0] cw, c0, c1;
+reg tc_start_tick = 1'b0;
+wire tc_done_tick;
 
 bram #(.ADDR_WIDTH(16), .DATA_WIDTH(8), .DATA_FILE("input_1_uint8.data")) bram_a
-    (.clk(clk), .we(we_a), .addr_a(addr_aw), .addr_b(addr_ar), .din_a(aw), .dout_a(), .dout_b(a));
+    (.clk(clk), .we(we_a), .addr_a(addr_a0), .addr_b(addr_a1), .din_a(aw), .dout_a(a0), .dout_b(a1));
 
 bram #(.ADDR_WIDTH(16), .DATA_WIDTH(8)) bram_b
-    (.clk(clk), .we(we_b), .addr_a(addr_bw), .addr_b(addr_br), .din_a(bw), .dout_a(), .dout_b(b));
+    (.clk(clk), .we(we_b), .addr_a(addr_b0), .addr_b(addr_b1), .din_a(bw), .dout_a(b0), .dout_b(b1));
 
 bram #(.ADDR_WIDTH(16), .DATA_WIDTH(32)) bram_c
-    (.clk(clk), .we(we_c), .addr_a(addr_c), .addr_b(addr_result), .din_a(cw), .dout_a(c), .dout_b(result));
+    (.clk(clk), .we(we_c), .addr_a(addr_c0), .addr_b(addr_c1), .din_a(cw), .dout_a(c0), .dout_b(c1));
+
+// row_vec max size (max n) = 8192, precomputed
+bram #(.ADDR_WIDTH(13), .DATA_WIDTH(32)) bram_row_vec
+    (.clk(clk), .we(1'b0), .addr_a(addr_rv0), .addr_b(13'd0), .din_a(32'd0), .dout_a(rv0), .dout_b());
+
+// col_vec max size (max m) = 1024
+bram #(.ADDR_WIDTH(10), .DATA_WIDTH(32)) bram_col_vec
+    (.clk(clk), .we(we_cv), .addr_a(addr_cv0), .addr_b(addr_cv1), .din_a(cvw), .dout_a(), .dout_b(cv1));
+
+col_vec col_vec_unit
+    (.clk(clk), .start_tick(cv_start_tick), .m(14'd9), .k(14'd2), .rhs_offset(8'd2),
+     .a(a0), .a_rd_addr(addr_a0), .addr_cvw(addr_cv0), .val(cvw), .we(we_cv), .done_tick(cv_done_tick));
 
 // TODO: pass constants as parameters?
 transconv tc_unit
-    (.clk(clk), .reset(reset), .start_tick(start_tick), .m(14'd9), .k(14'd2), .n(14'd8),
+    (.clk(clk), .reset(reset), .start_tick(tc_start_tick), .m(14'd9), .k(14'd2), .n(14'd8),
      .n_output_plane(10'd2), .output_plane_start(output_plane_start), .output_plane_batch_size(10'd1),
      .output_h(7'd4), .output_w(7'd4), .input_h(7'd3), .input_w(7'd3),
      .kernel_h(3'd2), .kernel_w(3'd2), .pad_h(3'd1), .pad_w(3'd1),
-     .stride_h(3'd2), .stride_w(3'd2), .dilation_h(3'd1), .dilation_w(3'd1), .a(a), .b(b), .c(c),
-     .a_rd_addr(addr_ar), .b_rd_addr(addr_br), .c_rw_addr(addr_c), .c_out(cw), .c_wr_en(we_c),
-     .done_tick(done_tick));
+     .stride_h(3'd2), .stride_w(3'd2), .dilation_h(3'd1), .dilation_w(3'd1), .a(a1), .b(b1), .c(c0),
+     .a_rd_addr(addr_a1), .b_rd_addr(addr_b1), .c_rw_addr(addr_c0), .c_out(cw), .c_wr_en(we_c),
+     .done_tick(tc_done_tick));
 
 wbqspiflash wbqspiflash_unit(.i_clk(clk),
 		// Internal wishbone connections
@@ -93,7 +116,24 @@ begin
     case (state)
         idle:
             begin
-                if (btn_tick || read_spi_tick) // technically, also !o_wb_stall
+                if (btn_tick)
+                    begin
+                        state <= col_vec;
+                        cv_start_tick <= 1'b1;
+                    end
+            end
+        col_vec:
+            begin
+                cv_start_tick <= 1'b0;
+                if (cv_done_tick)
+                    begin
+                        state <= wait_spi;
+                        read_spi_tick <= 1'b1;
+                    end
+            end
+        wait_spi:
+            begin
+                if (read_spi_tick) // technically, also !o_wb_stall
                     begin
                         i_wb_cyc <= 1'b1;
                         i_wb_data_stb <= 1'b1;
@@ -107,15 +147,15 @@ begin
                         i_wb_data_stb <= 1'b0;
 
                         // start to load the 4 bytes into bram
-                        state <= load;
+                        state <= load_spi;
                         bw <= o_wb_data[31:24];
                         we_b <= 1'b1;
-                        addr_bw <= addr_bw + 1;
+                        addr_b0 <= addr_b0 + 1;
                         load_byte <= load_byte + 1;
                         weight_bytes_loaded <= weight_bytes_loaded + 4;
                     end
             end
-        load:
+        load_spi:
             begin
                 case (load_byte)
                     2'b01:
@@ -127,37 +167,39 @@ begin
                 endcase
 
                 we_b <= 1'b1;
-                addr_bw <= addr_bw + 1;
+                addr_b0 <= addr_b0 + 1;
                 load_byte <= load_byte + 1;
 
                 if (load_byte == 3) // finished the 4 bytes
                     begin
                         if (weight_bytes_loaded == 8) // finished loading weights for this batch
                             begin
-                                state <= exec;
+                                state <= transconv;
                                 weight_bytes_loaded <= 0;
-                                start_tick <= 1'b1;
+                                tc_start_tick <= 1'b1;
                             end
                         else // keep loading weights
                             begin
-                                state <= idle;
+                                state <= wait_spi;
                                 read_spi_tick <= 1'b1;
                                 i_wb_addr <= i_wb_addr + 1; // not +4!
                             end
                     end
             end
-        exec:
+        transconv:
             begin
-                start_tick <= 1'b0;
-                if (done_tick)
+                tc_start_tick <= 1'b0;
+                if (tc_done_tick)
                     begin
-                        state <= idle;
                         if (output_plane_start < 1)
                             begin
+                                state <= wait_spi;
                                 output_plane_start <= output_plane_start + 1;
                                 read_spi_tick <= 1'b1;
                                 i_wb_addr <= i_wb_addr + 1; // not +4!
                             end
+                        else
+                            state <= idle;
                     end
             end
     endcase
@@ -189,13 +231,13 @@ begin
     @(negedge clk);
     btn_tick = 1'b0;
 
-    wait(done_tick);
+    wait(tc_done_tick);
     repeat(2) @(negedge clk);
-    wait(done_tick);
+    wait(tc_done_tick);
 
     for (i = 0; i < 31; i = i+1) begin
         @(negedge clk);
-        addr_result = addr_result + 1;
+        addr_c1 = addr_c1 + 1;
     end
 end
 
