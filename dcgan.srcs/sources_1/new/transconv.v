@@ -130,73 +130,6 @@ begin
         end
 end
 
-task inner_loop;
-    begin
-        if (w_col == input_w - 1)
-            begin
-                h_col_next = h_col + 1;
-                w_col_next = 0;
-            end
-        else
-            begin
-                w_col_next = w_col + 1;
-            end
-        i_next = i + 1;
-    end
-endtask
-
-task inner_loop2;
-    begin
-        if (h_col == input_h - 1)
-            begin
-                if (w_col == input_w - 1)
-                    begin
-                        w_offset_next = w_offset + 1;
-                        h_col_next = 0;
-                        w_col_next = 0;
-                        i_next = 0;
-                        j_next = j + 1;
-                    end
-                else
-                    begin
-                        w_col_next = w_col + 1;
-                        i_next = i + 1;
-                    end
-            end
-        else
-            inner_loop();
-    end
-endtask
-
-task inner_loop3;
-    begin
-        if (w_offset == kernel_w - 1)
-            begin
-                if (h_col == input_h - 1)
-                    begin
-                        if (w_col == input_w - 1)
-                            begin
-                                h_offset_next = h_offset + 1;
-                                w_offset_next = 0;
-                                h_col_next = 0;
-                                w_col_next = 0;
-                                i_next = 0;
-                                j_next = j + 1;
-                            end
-                        else
-                            begin
-                                w_col_next = w_col + 1;
-                                i_next = i + 1;
-                            end
-                    end
-                else
-                    inner_loop();
-            end
-        else
-            inner_loop2();
-    end
-endtask
-
 always @*
 begin
     state_next = state;
@@ -247,13 +180,13 @@ begin
             end
         loop: // 1
             begin
-                if (h_offset == kernel_h - 1)
+                if (w_col == input_w - 1)
                     begin
-                        if (w_offset == kernel_w - 1)
+                        if (h_col == input_h - 1)
                             begin
-                                if (h_col == input_h - 1)
+                                if (w_offset == kernel_w - 1)
                                     begin
-                                        if (w_col == input_w - 1)
+                                        if (h_offset == kernel_h - 1)
                                             begin
                                                 if (c_im == n_output_plane - 1)
                                                     last_next = 1'b1;
@@ -270,18 +203,35 @@ begin
                                             end
                                         else
                                             begin
-                                                w_col_next = w_col + 1;
-                                                i_next = i + 1;
+                                                h_offset_next = h_offset + 1;
+                                                w_offset_next = 0;
+                                                h_col_next = 0;
+                                                w_col_next = 0;
+                                                i_next = 0;
+                                                j_next = j + 1;
                                             end
                                     end
                                 else
-                                    inner_loop();
+                                    begin
+                                        w_offset_next = w_offset + 1;
+                                        h_col_next = 0;
+                                        w_col_next = 0;
+                                        i_next = 0;
+                                        j_next = j + 1;
+                                    end
                             end
                         else
-                            inner_loop2();
+                            begin
+                                h_col_next = h_col + 1;
+                                w_col_next = 0;
+                                i_next = i + 1;
+                            end
                     end
                 else
-                    inner_loop3();
+                    begin
+                        w_col_next = w_col + 1;
+                        i_next = i + 1;
+                    end
 
                 state_next = pick;
                 // it is important to save i and j's values here use the saved value for macc
