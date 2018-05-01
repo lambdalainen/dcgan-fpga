@@ -11,9 +11,9 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="298275563000fs"></ZoomStartTime>
-      <ZoomEndTime time="311355563001fs"></ZoomEndTime>
-      <Cursor1Time time="307175563000fs"></Cursor1Time>
+      <ZoomStartTime time="308574077000fs"></ZoomStartTime>
+      <ZoomEndTime time="308639477001fs"></ZoomEndTime>
+      <Cursor1Time time="308551777000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="165"></NameColumnWidth>
@@ -22,6 +22,7 @@
    <WVObjectSize size="19" />
    <wave_markers>
       <marker label="" time="303099600000" />
+      <marker label="" time="308498680000" />
    </wave_markers>
    <wvobject type="logic" fp_name="/top_tb/clk">
       <obj_property name="ElementShortName">clk</obj_property>
