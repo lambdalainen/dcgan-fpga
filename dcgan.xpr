@@ -31,7 +31,7 @@
     <Option Name="EnableBDX" Val="FALSE"/>
     <Option Name="DSAVendor" Val="xilinx"/>
     <Option Name="DSANumComputeUnits" Val="60"/>
-    <Option Name="WTXSimLaunchSim" Val="219"/>
+    <Option Name="WTXSimLaunchSim" Val="235"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -194,6 +194,12 @@
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../transposed_convolution_test/transposed_convolution_test.srcs/sources_1/imports/transposed_convolution_test/input_1_uint8.data"/>
           <Attr Name="ImportTime" Val="1523368353"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sim_1/new/row_vec.mem">
+        <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>

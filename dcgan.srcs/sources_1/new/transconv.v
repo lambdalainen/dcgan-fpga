@@ -8,7 +8,9 @@ module transconv
               MKN_WIDTH = 14, // max 2^14 - 1 = 16383, our max row/col number is 8192
               N_OUT_PLANE_WIDTH = 10,
               INOUT_WH_WIDTH = 7,
-              MISC_WIDTH = 3
+              MISC_WIDTH = 3,
+              RV_ADDR_WIDTH = 13,
+              CV_ADDR_WIDTH = 10
 )
 (
     input wire clk,
@@ -35,9 +37,14 @@ module transconv
     input wire [DATA_WIDTH-1:0] a,
     input wire [DATA_WIDTH-1:0] b,
     input wire [ACC_WIDTH-1:0] c, // be careful with the width here
+    input wire [ACC_WIDTH-1:0] rv,
+    input wire [ACC_WIDTH-1:0] cv,
+    input wire [ACC_WIDTH-1:0] term4,
     output wire [ADDR_WIDTH-1:0] a_rd_addr,
     output wire [ADDR_WIDTH-1:0] b_rd_addr,
     output wire [ADDR_WIDTH-1:0] c_rw_addr,
+    output wire [RV_ADDR_WIDTH-1:0] addr_rv,
+    output wire [CV_ADDR_WIDTH-1:0] addr_cv,
     output reg [ACC_WIDTH-1:0] c_out,
     output reg c_wr_en,
     output reg done_tick
@@ -268,7 +275,7 @@ begin
                             state_next = done;
                         else
                             state_next = loop;
-                        c_out = c + acc[ACC_WIDTH-1:0];
+                        c_out = c + acc[ACC_WIDTH-1:0] + rv + cv + term4;
                         c_wr_en = 1'b1;
                         macc_reset = 1'b1;
                     end
@@ -299,6 +306,9 @@ end
 assign a_rd_addr = a_rd_addr_next;
 assign b_rd_addr = b_rd_addr_next;
 assign c_rw_addr = c_rw_addr_next;
+
+assign addr_rv = j_saved;
+assign addr_cv = i_saved;
 
 // If these were to be implemented in fabric, they pass all simulations but fail on device
 // due to large propagation delays. Therefore, we compute them with DSP48 and wait for a cycle

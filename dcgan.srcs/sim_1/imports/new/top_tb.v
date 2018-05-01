@@ -64,7 +64,7 @@ bram #(.ADDR_WIDTH(16), .DATA_WIDTH(32)) bram_c
     (.clk(clk), .we(we_c), .addr_a(addr_c0), .addr_b(addr_c1), .din_a(cw), .dout_a(c0), .dout_b(c1));
 
 // row_vec max size (max n) = 8192, precomputed
-bram #(.ADDR_WIDTH(13), .DATA_WIDTH(32)) bram_row_vec
+bram #(.ADDR_WIDTH(13), .DATA_WIDTH(32), .DATA_FILE("row_vec.mem")) bram_row_vec
     (.clk(clk), .we(1'b0), .addr_a(addr_rv0), .addr_b(13'd0), .din_a(32'd0), .dout_a(rv0), .dout_b());
 
 // col_vec max size (max m) = 1024
@@ -81,9 +81,10 @@ transconv tc_unit
      .n_output_plane(10'd2), .output_plane_start(output_plane_start), .output_plane_batch_size(10'd1),
      .output_h(7'd4), .output_w(7'd4), .input_h(7'd3), .input_w(7'd3),
      .kernel_h(3'd2), .kernel_w(3'd2), .pad_h(3'd1), .pad_w(3'd1),
-     .stride_h(3'd2), .stride_w(3'd2), .dilation_h(3'd1), .dilation_w(3'd1), .a(a1), .b(b1), .c(c0),
-     .a_rd_addr(addr_a1), .b_rd_addr(addr_b1), .c_rw_addr(addr_c0), .c_out(cw), .c_wr_en(we_c),
-     .done_tick(tc_done_tick));
+     .stride_h(3'd2), .stride_w(3'd2), .dilation_h(3'd1), .dilation_w(3'd1),
+     .a(a1), .b(b1), .c(c0), .rv(rv0), .cv(cv1), .term4(32'd4),
+     .a_rd_addr(addr_a1), .b_rd_addr(addr_b1), .c_rw_addr(addr_c0), .addr_rv(addr_rv0), .addr_cv(addr_cv1),
+     .c_out(cw), .c_wr_en(we_c), .done_tick(tc_done_tick));
 
 wbqspiflash wbqspiflash_unit(.i_clk(clk),
 		// Internal wishbone connections

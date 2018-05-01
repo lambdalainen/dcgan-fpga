@@ -107,6 +107,6 @@ begin
 end
 
 assign a_rd_addr = a_rd_addr_next;
-assign addr_cvw = addr_cvw_next;
+assign addr_cvw = addr_cvw_reg;
 
 endmodule
