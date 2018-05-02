@@ -1,10 +1,10 @@
 // Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2017.4.1 (lin64) Build 2117270 Tue Jan 30 15:31:13 MST 2018
-// Date        : Sun Apr 29 12:33:40 2018
+// Date        : Sun Apr 29 12:33:39 2018
 // Host        : aufheben-desktop running 64-bit Ubuntu 16.04.4 LTS
-// Command     : write_verilog -force -mode synth_stub
-//               /home/aufheben/Vivado/dcgan/dcgan.srcs/sources_1/ip/xbip_dsp48_macro_0/xbip_dsp48_macro_0_stub.v
+// Command     : write_verilog -force -mode synth_stub -rename_top xbip_dsp48_macro_0 -prefix
+//               xbip_dsp48_macro_0_ xbip_dsp48_macro_0_stub.v
 // Design      : xbip_dsp48_macro_0
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7a100tcsg324-1
