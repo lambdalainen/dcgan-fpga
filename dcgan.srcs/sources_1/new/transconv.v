@@ -56,7 +56,8 @@ localparam [2:0]
     loop = 3'b001,
     pick = 3'b010,
     macc = 3'b011,
-    done = 3'b100;
+    save = 3'b100,
+    done = 3'b101;
 
 wire [MISC_WIDTH*2-1:0] kh_x_kw = kernel_h * kernel_w;
 wire [MKN_WIDTH-1:0] j_max = (output_plane_start + output_plane_batch_size) * kh_x_kw - 1;
@@ -260,7 +261,6 @@ begin
                         // c_rw_addr_p depends on c_im, h_im and w_im, which are computed for the previous loop cycle
                         c_rw_addr_next = c_rw_addr_p[ADDR_WIDTH-1:0];
                         l_next = 1; // set to 1 so that in the next cycle, a_rd_addr_next can be computed
-                        macc_ce = 1'b1;
                     end
                 else if (last_next)
                     state_next = done;
@@ -269,24 +269,26 @@ begin
             end
         macc: // 3
             begin
+                macc_ce = 1'b1;
                 if (l == k) // l started with 1 instead of 0
-                    begin
-                        if (last)
-                            state_next = done;
-                        else
-                            state_next = loop;
-                        c_out = c + acc[ACC_WIDTH-1:0] + rv + cv + term4;
-                        c_wr_en = 1'b1;
-                        macc_reset = 1'b1;
-                    end
+                    state_next = save;
                 else
                     begin
                         l_next = l + 1;
                         // these addresses are ready in this cycle since we used l_next in the previous cycle as input to DSP48
                         a_rd_addr_next = a_rd_addr_p[ADDR_WIDTH-1:0];
                         b_rd_addr_next = b_rd_addr_p[ADDR_WIDTH-1:0];
-                        macc_ce = 1'b1;
                     end
+            end
+        save:
+            begin
+                if (last)
+                    state_next = done;
+                else
+                    state_next = loop;
+                c_out = c + acc[ACC_WIDTH-1:0] + rv + cv + term4;
+                c_wr_en = 1'b1;
+                macc_reset = 1'b1;
             end
         done: // 4
             begin
@@ -395,8 +397,8 @@ xbip_dsp48_macro_1 dsp48_macc (
   .CLK(clk),
   .CE(macc_ce),
   .SCLR(macc_reset),
-  .A(a),
-  .B(b),
+  .A({1'b0, a}),
+  .B({1'b0, b}),
   .P(acc)
 );
 
