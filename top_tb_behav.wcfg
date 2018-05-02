@@ -11,19 +11,18 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="308762780000fs"></ZoomStartTime>
-      <ZoomEndTime time="308828180001fs"></ZoomEndTime>
-      <Cursor1Time time="308498680000fs"></Cursor1Time>
+      <ZoomStartTime time="308872703000fs"></ZoomStartTime>
+      <ZoomEndTime time="308938503001fs"></ZoomEndTime>
+      <Cursor1Time time="308889903000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="165"></NameColumnWidth>
-      <ValueColumnWidth column_width="94"></ValueColumnWidth>
+      <ValueColumnWidth column_width="90"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="19" />
+   <WVObjectSize size="24" />
    <wave_markers>
-      <marker label="" time="308498680000" />
-      <marker label="" time="307451000000" />
-      <marker label="" time="303299000000" />
+      <marker label="" time="300010136000" />
+      <marker label="" time="308849803000" />
    </wave_markers>
    <wvobject type="logic" fp_name="/top_tb/clk">
       <obj_property name="ElementShortName">clk</obj_property>
@@ -56,6 +55,10 @@
    <wvobject type="logic" fp_name="/top_tb/we_cv">
       <obj_property name="ElementShortName">we_cv</obj_property>
       <obj_property name="ObjectShortName">we_cv</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/col_vec_unit/acc_next">
+      <obj_property name="ElementShortName">acc_next[31:0]</obj_property>
+      <obj_property name="ObjectShortName">acc_next[31:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/top_tb/cvw">
       <obj_property name="ElementShortName">cvw[31:0]</obj_property>
@@ -100,5 +103,21 @@
    <wvobject type="logic" fp_name="/top_tb/tc_done_tick">
       <obj_property name="ElementShortName">tc_done_tick</obj_property>
       <obj_property name="ObjectShortName">tc_done_tick</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/col_vec_unit/i_next">
+      <obj_property name="ElementShortName">i_next[13:0]</obj_property>
+      <obj_property name="ObjectShortName">i_next[13:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/col_vec_unit/j_next">
+      <obj_property name="ElementShortName">j_next[13:0]</obj_property>
+      <obj_property name="ObjectShortName">j_next[13:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/col_vec_unit/a_rd_addr_p">
+      <obj_property name="ElementShortName">a_rd_addr_p[47:0]</obj_property>
+      <obj_property name="ObjectShortName">a_rd_addr_p[47:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_tb/col_vec_unit/state">
+      <obj_property name="ElementShortName">state[2:0]</obj_property>
+      <obj_property name="ObjectShortName">state[2:0]</obj_property>
    </wvobject>
 </wave_config>
