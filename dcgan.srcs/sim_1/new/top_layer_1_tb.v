@@ -58,6 +58,12 @@ wire [7:0] a1, b1;
 wire [31:0] cw, c0, c1;
 reg tc_start_tick = 1'b0;
 wire tc_done_tick;
+wire [9:0] addr_tc_b;
+wire [31:0] tc_b;
+
+// batchnorm
+wire [9:0] addr_bn_w, addr_bn_b;
+wire [31:0] bn_w, bn_b;
 
 bram #(.ADDR_WIDTH(16), .DATA_WIDTH(8), .DATA_FILE("input_1_uint8.mem")) bram_a
     (.clk(clk), .we(we_a), .addr_a(addr_a0), .addr_b(addr_a1), .din_a(aw), .dout_a(a0), .dout_b(a1));
@@ -76,6 +82,18 @@ bram #(.ADDR_WIDTH(13), .DATA_WIDTH(32), .DATA_FILE("row_vec_1_int32.mem")) bram
 bram #(.ADDR_WIDTH(10), .DATA_WIDTH(32)) bram_col_vec
     (.clk(clk), .we(we_cv), .addr_a(addr_cv0), .addr_b(addr_cv1), .din_a(cvw), .dout_a(), .dout_b(cv1));
 
+// tc bias size = 512 + 256 + 128 + 64 + 3 = 963
+bram #(.ADDR_WIDTH(10), .DATA_WIDTH(32), .DATA_FILE("tc_bias.mem")) bram_tc_bias
+    (.clk(clk), .we(1'b0), .addr_a(addr_tc_b), .addr_b(10'd0), .din_a(32'd0), .dout_a(tc_b), .dout_b());
+
+// bn weight size = 512 + 256 + 128 + 64 = 960
+bram #(.ADDR_WIDTH(10), .DATA_WIDTH(32)) bram_bn_weight
+    (.clk(clk), .we(1'b0), .addr_a(addr_bn_w), .addr_b(10'd0), .din_a(32'd0), .dout_a(bn_w), .dout_b());
+
+// bn bias size = 512 + 256 + 128 + 64 = 960
+bram #(.ADDR_WIDTH(10), .DATA_WIDTH(32)) bram_bn_bias
+    (.clk(clk), .we(1'b0), .addr_a(addr_bn_b), .addr_b(10'd0), .din_a(32'd0), .dout_a(bn_b), .dout_b());
+
 col_vec col_vec_unit
     (.clk(clk), .start_tick(cv_start_tick), .m(14'd1), .k(14'd100), .rhs_offset(8'd139),
      .a(a0), .a_rd_addr(addr_a0), .addr_cvw(addr_cv0), .val(cvw), .we(we_cv), .done_tick(cv_done_tick));
@@ -87,8 +105,9 @@ transconv tc_unit
      .output_h(7'd4), .output_w(7'd4), .input_h(7'd1), .input_w(7'd1),
      .kernel_h(3'd4), .kernel_w(3'd4), .pad_h(3'd0), .pad_w(3'd0),
      .stride_h(3'd1), .stride_w(3'd1), .dilation_h(3'd1), .dilation_w(3'd1),
-     .a(a1), .b(b1), .c(c0), .rv(rv0), .cv(cv1), .term4(32'd1779200),
-     .a_rd_addr(addr_a1), .b_rd_addr(addr_b1), .c_rw_addr(addr_c0), .addr_rv(addr_rv0), .addr_cv(addr_cv1),
+     .a(a1), .b(b1), .c(c0), .rv(rv0), .cv(cv1), .term4(32'd1779200), .bias(tc_b),
+     .a_rd_addr(addr_a1), .b_rd_addr(addr_b1), .c_rw_addr(addr_c0),
+     .addr_rv(addr_rv0), .addr_cv(addr_cv1), .addr_bias(addr_tc_b),
      .c_out(cw), .c_wr_en(we_c), .done_tick(tc_done_tick));
 
 wbqspiflash wbqspiflash_unit(.i_clk(clk),

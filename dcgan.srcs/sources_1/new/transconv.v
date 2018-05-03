@@ -10,7 +10,8 @@ module transconv
               INOUT_WH_WIDTH = 7,
               MISC_WIDTH = 3,
               RV_ADDR_WIDTH = 13,
-              CV_ADDR_WIDTH = 10
+              CV_ADDR_WIDTH = 10,
+              BIAS_ADDR_WIDTH = 10
 )
 (
     input wire clk,
@@ -22,7 +23,7 @@ module transconv
     input wire [N_OUT_PLANE_WIDTH-1:0] n_output_plane,
     input wire [N_OUT_PLANE_WIDTH-1:0] output_plane_start,
     input wire [N_OUT_PLANE_WIDTH-1:0] output_plane_batch_size,
-    input wire [INOUT_WH_WIDTH-1:0] output_h,
+    input wire [INOUT_WH_WIDTH-1:0] output_h, // TODO: place these in registers to reduce pin count
     input wire [INOUT_WH_WIDTH-1:0] output_w,
     input wire [INOUT_WH_WIDTH-1:0] input_h,
     input wire [INOUT_WH_WIDTH-1:0] input_w,
@@ -40,11 +41,13 @@ module transconv
     input wire [ACC_WIDTH-1:0] rv,
     input wire [ACC_WIDTH-1:0] cv,
     input wire [ACC_WIDTH-1:0] term4,
+    input wire [DATA_WIDTH-1:0] bias,
     output wire [ADDR_WIDTH-1:0] a_rd_addr,
     output wire [ADDR_WIDTH-1:0] b_rd_addr,
     output wire [ADDR_WIDTH-1:0] c_rw_addr,
     output wire [RV_ADDR_WIDTH-1:0] addr_rv,
     output wire [CV_ADDR_WIDTH-1:0] addr_cv,
+    output wire [BIAS_ADDR_WIDTH-1:0] addr_bias,
     output reg [ACC_WIDTH-1:0] c_out,
     output reg c_wr_en,
     output reg done_tick
@@ -78,6 +81,7 @@ reg last, last_next;
 
 
 reg [N_OUT_PLANE_WIDTH-1:0] c_im, c_im_next;
+reg [N_OUT_PLANE_WIDTH-1:0] c_im_saved, c_im_saved_next;
 reg [MISC_WIDTH-1:0] h_offset, h_offset_next;
 reg [MISC_WIDTH-1:0] w_offset, w_offset_next;
 reg [INOUT_WH_WIDTH-1:0] h_col, h_col_next;
@@ -110,6 +114,7 @@ begin
             last <= 0;
 
             c_im <= 0;
+            c_im_saved <= 0;
             h_offset <= 0;
             w_offset <= 0;
             h_col <= 0;
@@ -131,6 +136,7 @@ begin
             last <= last_next;
 
             c_im <= c_im_next;
+            c_im_saved <= c_im_saved_next;
             h_offset <= h_offset_next;
             w_offset <= w_offset_next;
             h_col <= h_col_next;
@@ -153,6 +159,7 @@ begin
     last_next = last;
 
     c_im_next = c_im;
+    c_im_saved_next = c_im_saved;
     h_offset_next = h_offset;
     w_offset_next = w_offset;
     h_col_next = h_col;
@@ -245,6 +252,7 @@ begin
                 // it is important to save i and j's values here use the saved value for macc
                 i_saved_next = i;
                 j_saved_next = j;
+                c_im_saved_next = c_im;
                 a_rd_addr_next = i;
                 b_rd_addr_next = j * k;
 
@@ -286,7 +294,7 @@ begin
                     state_next = done;
                 else
                     state_next = loop;
-                c_out = c + acc[ACC_WIDTH-1:0] + rv + cv + term4;
+                c_out = c + acc[ACC_WIDTH-1:0] + rv + cv + term4 + bias;
                 c_wr_en = 1'b1;
                 macc_reset = 1'b1;
             end
@@ -311,6 +319,7 @@ assign c_rw_addr = c_rw_addr_next;
 
 assign addr_rv = j_saved;
 assign addr_cv = i_saved;
+assign addr_bias = c_im_saved;
 
 // If these were to be implemented in fabric, they pass all simulations but fail on device
 // due to large propagation delays. Therefore, we compute them with DSP48 and wait for a cycle
