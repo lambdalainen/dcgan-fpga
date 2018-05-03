@@ -54,7 +54,7 @@ wire [31:0] cw, c0, c1;
 reg tc_start_tick = 1'b0;
 wire tc_done_tick;
 
-bram #(.ADDR_WIDTH(16), .DATA_WIDTH(8), .DATA_FILE("input_1_uint8.data")) bram_a
+bram #(.ADDR_WIDTH(16), .DATA_WIDTH(8), .DATA_FILE("test_input_uint8.mem")) bram_a
     (.clk(clk), .we(we_a), .addr_a(addr_a0), .addr_b(addr_a1), .din_a(aw), .dout_a(a0), .dout_b(a1));
 
 bram #(.ADDR_WIDTH(16), .DATA_WIDTH(8)) bram_b
@@ -64,7 +64,7 @@ bram #(.ADDR_WIDTH(16), .DATA_WIDTH(32)) bram_c
     (.clk(clk), .we(we_c), .addr_a(addr_c0), .addr_b(addr_c1), .din_a(cw), .dout_a(c0), .dout_b(c1));
 
 // row_vec max size (max n) = 8192, precomputed
-bram #(.ADDR_WIDTH(13), .DATA_WIDTH(32), .DATA_FILE("row_vec.mem")) bram_row_vec
+bram #(.ADDR_WIDTH(13), .DATA_WIDTH(32), .DATA_FILE("test_row_vec_int32.mem")) bram_row_vec
     (.clk(clk), .we(1'b0), .addr_a(addr_rv0), .addr_b(13'd0), .din_a(32'd0), .dout_a(rv0), .dout_b());
 
 // col_vec max size (max m) = 1024

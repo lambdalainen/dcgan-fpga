@@ -27,6 +27,7 @@ reg [2:0] state = idle;
 reg [1:0] load_byte = 2'b00;
 reg [17:0] weight_bytes_loaded = 18'd0;
 reg [9:0] output_plane_start = 10'd0;
+reg [9:0] output_plane_batch_size = 10'd40;
 
 // Wishbone inputs
 reg i_wb_cyc, i_wb_data_stb;
@@ -63,7 +64,7 @@ wire [31:0] cw, c0, c1;
 reg tc_start_tick = 1'b0;
 wire tc_done_tick;
 
-bram #(.ADDR_WIDTH(16), .DATA_WIDTH(8), .DATA_FILE("input_1_uint8.data")) bram_lhs
+bram #(.ADDR_WIDTH(16), .DATA_WIDTH(8), .DATA_FILE("input_1_uint8.mem")) bram_lhs
     (.clk(clk), .we(we_a), .addr_a(addr_a0), .addr_b(addr_a1), .din_a(aw), .dout_a(a0), .dout_b(a1));
 
 bram #(.ADDR_WIDTH(16), .DATA_WIDTH(8)) bram_b
@@ -73,7 +74,7 @@ bram #(.ADDR_WIDTH(16), .DATA_WIDTH(32)) bram_c
     (.clk(clk), .we(we_c), .addr_a(addr_c0), .addr_b(addr_c1), .din_a(cw), .dout_a(c0), .dout_b(c1));
 
 // row_vec max size (max n) = 8192, precomputed
-bram #(.ADDR_WIDTH(13), .DATA_WIDTH(32), .DATA_FILE("row_vec.mem")) bram_row_vec
+bram #(.ADDR_WIDTH(13), .DATA_WIDTH(32), .DATA_FILE("row_vec_1_int32.mem")) bram_row_vec
     (.clk(clk), .we(1'b0), .addr_a(addr_rv0), .addr_b(13'd0), .din_a(32'd0), .dout_a(rv0), .dout_b());
 
 // col_vec max size (max m) = 1024
@@ -81,16 +82,16 @@ bram #(.ADDR_WIDTH(10), .DATA_WIDTH(32)) bram_col_vec
     (.clk(clk), .we(we_cv), .addr_a(addr_cv0), .addr_b(addr_cv1), .din_a(cvw), .dout_a(), .dout_b(cv1));
 
 col_vec col_vec_unit
-    (.clk(clk), .start_tick(cv_start_tick), .m(14'd9), .k(14'd2), .rhs_offset(8'd2),
+    (.clk(clk), .start_tick(cv_start_tick), .m(14'd1), .k(14'd100), .rhs_offset(8'd139),
      .a(a0), .a_rd_addr(addr_a0), .addr_cvw(addr_cv0), .val(cvw), .we(we_cv), .done_tick(cv_done_tick));
 
 transconv tc_unit
-    (.clk(clk), .reset(1'b0), .start_tick(tc_start_tick), .m(14'd9), .k(14'd2), .n(14'd8),
-     .n_output_plane(10'd2), .output_plane_start(output_plane_start), .output_plane_batch_size(10'd1),
-     .output_h(7'd4), .output_w(7'd4), .input_h(7'd3), .input_w(7'd3),
-     .kernel_h(3'd2), .kernel_w(3'd2), .pad_h(3'd1), .pad_w(3'd1),
-     .stride_h(3'd2), .stride_w(3'd2), .dilation_h(3'd1), .dilation_w(3'd1),
-     .a(a1), .b(b1), .c(c0), .rv(rv0), .cv(cv1), .term4(32'd4),
+    (.clk(clk), .reset(1'b0), .start_tick(tc_start_tick), .m(14'd1), .k(14'd100), .n(14'd8192),
+     .n_output_plane(10'd512), .output_plane_start(output_plane_start), .output_plane_batch_size(output_plane_batch_size),
+     .output_h(7'd4), .output_w(7'd4), .input_h(7'd1), .input_w(7'd1),
+     .kernel_h(3'd4), .kernel_w(3'd4), .pad_h(3'd0), .pad_w(3'd0),
+     .stride_h(3'd1), .stride_w(3'd1), .dilation_h(3'd1), .dilation_w(3'd1),
+     .a(a1), .b(b1), .c(c0), .rv(rv0), .cv(cv1), .term4(32'd1779200),
      .a_rd_addr(addr_a1), .b_rd_addr(addr_b1), .c_rw_addr(addr_c0), .addr_rv(addr_rv0), .addr_cv(addr_cv1),
      .c_out(cw), .c_wr_en(we_c), .done_tick(tc_done_tick));
 
@@ -217,7 +218,7 @@ begin
 
                 if (load_byte == 3) // finished the 4 bytes
                     begin
-                        if (weight_bytes_loaded == 8) // finished loading weights for this batch
+                        if (weight_bytes_loaded == 64000) // finished loading weights for this batch
                             begin
                                 state <= transconv;
                                 weight_bytes_loaded <= 0;
@@ -236,10 +237,18 @@ begin
                 tc_start_tick <= 1'b0;
                 if (tc_done_tick)
                     begin
-                        if (output_plane_start < 1)
+                        if (output_plane_start < 440)
                             begin
                                 state <= wait_spi;
-                                output_plane_start <= output_plane_start + 1;
+                                output_plane_start <= output_plane_start + 40;
+                                read_spi_tick <= 1'b1;
+                                i_wb_addr <= i_wb_addr + 1; // not +4!
+                            end
+                        else if (output_plane_start == 440)
+                            begin
+                                state <= wait_spi;
+                                output_plane_start <= output_plane_start + 40;
+                                output_plane_batch_size <= 32;
                                 read_spi_tick <= 1'b1;
                                 i_wb_addr <= i_wb_addr + 1; // not +4!
                             end
