@@ -247,7 +247,7 @@ module s25fl128s
     assign SO_z = SOut_z;
 
     parameter UserPreload       = 1;
-    parameter mem_file_name     = "s25fl128s.mem";//"none"
+    parameter mem_file_name     = "s25fl128s.mem";//"none", or, for top_layer_1_tb, "weight_1_fpga.mem"
     parameter otp_file_name     = "s25fl128sOTP.mem";//"none";
 
     parameter TimingModel       = "DefaultTimingModel";

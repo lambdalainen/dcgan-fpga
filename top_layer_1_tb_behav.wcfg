@@ -3,101 +3,113 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="top_tb_behav.wdb" id="1">
+      <db_ref path="top_layer_1_tb_behav.wdb" id="1">
          <top_modules>
             <top_module name="glbl" />
-            <top_module name="top_tb" />
+            <top_module name="top_layer_1_tb" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="309219100000fs"></ZoomStartTime>
-      <ZoomEndTime time="309275000001fs"></ZoomEndTime>
-      <Cursor1Time time="309226300000fs"></Cursor1Time>
+      <ZoomStartTime time="924030616667fs"></ZoomStartTime>
+      <ZoomEndTime time="924086916668fs"></ZoomEndTime>
+      <Cursor1Time time="924040000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="175"></NameColumnWidth>
-      <ValueColumnWidth column_width="110"></ValueColumnWidth>
+      <ValueColumnWidth column_width="106"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="20" />
-   <wvobject type="logic" fp_name="/top_tb/clk">
+   <WVObjectSize size="23" />
+   <wvobject type="logic" fp_name="/top_layer_1_tb/clk">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/btn_tick">
+   <wvobject type="logic" fp_name="/top_layer_1_tb/btn_tick">
       <obj_property name="ElementShortName">btn_tick</obj_property>
       <obj_property name="ObjectShortName">btn_tick</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/read_spi_tick">
+   <wvobject type="logic" fp_name="/top_layer_1_tb/read_spi_tick">
       <obj_property name="ElementShortName">read_spi_tick</obj_property>
       <obj_property name="ObjectShortName">read_spi_tick</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/top_tb/state">
+   <wvobject type="array" fp_name="/top_layer_1_tb/state">
       <obj_property name="ElementShortName">state[2:0]</obj_property>
       <obj_property name="ObjectShortName">state[2:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/top_tb/output_plane_start">
+   <wvobject type="array" fp_name="/top_layer_1_tb/output_plane_start">
       <obj_property name="ElementShortName">output_plane_start[9:0]</obj_property>
       <obj_property name="ObjectShortName">output_plane_start[9:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/i_wb_cyc">
+   <wvobject type="logic" fp_name="/top_layer_1_tb/i_wb_cyc">
       <obj_property name="ElementShortName">i_wb_cyc</obj_property>
       <obj_property name="ObjectShortName">i_wb_cyc</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/top_tb/addr_cv0">
-      <obj_property name="ElementShortName">addr_cv0[9:0]</obj_property>
-      <obj_property name="ObjectShortName">addr_cv0[9:0]</obj_property>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/o_wb_ack">
+      <obj_property name="ElementShortName">o_wb_ack</obj_property>
+      <obj_property name="ObjectShortName">o_wb_ack</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/we_cv">
+   <wvobject type="array" fp_name="/top_layer_1_tb/addr_cv1">
+      <obj_property name="ElementShortName">addr_cv1[9:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_cv1[9:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/we_cv">
       <obj_property name="ElementShortName">we_cv</obj_property>
       <obj_property name="ObjectShortName">we_cv</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/top_tb/col_vec_unit/acc_next">
-      <obj_property name="ElementShortName">acc_next[31:0]</obj_property>
-      <obj_property name="ObjectShortName">acc_next[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/top_tb/cvw">
+   <wvobject type="array" fp_name="/top_layer_1_tb/cvw">
       <obj_property name="ElementShortName">cvw[31:0]</obj_property>
       <obj_property name="ObjectShortName">cvw[31:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/top_tb/addr_a0">
-      <obj_property name="ElementShortName">addr_a0[15:0]</obj_property>
-      <obj_property name="ObjectShortName">addr_a0[15:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/top_tb/a0">
-      <obj_property name="ElementShortName">a0[7:0]</obj_property>
-      <obj_property name="ObjectShortName">a0[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/cv_start_tick">
+   <wvobject type="logic" fp_name="/top_layer_1_tb/cv_start_tick">
       <obj_property name="ElementShortName">cv_start_tick</obj_property>
       <obj_property name="ObjectShortName">cv_start_tick</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/cv_done_tick">
+   <wvobject type="logic" fp_name="/top_layer_1_tb/cv_done_tick">
       <obj_property name="ElementShortName">cv_done_tick</obj_property>
       <obj_property name="ObjectShortName">cv_done_tick</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/we_c">
+   <wvobject type="logic" fp_name="/top_layer_1_tb/we_c">
       <obj_property name="ElementShortName">we_c</obj_property>
       <obj_property name="ObjectShortName">we_c</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/top_tb/cw">
+   <wvobject type="array" fp_name="/top_layer_1_tb/cw">
       <obj_property name="ElementShortName">cw[31:0]</obj_property>
       <obj_property name="ObjectShortName">cw[31:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/top_tb/addr_c1">
+   <wvobject type="array" fp_name="/top_layer_1_tb/addr_c1">
       <obj_property name="ElementShortName">addr_c1[15:0]</obj_property>
       <obj_property name="ObjectShortName">addr_c1[15:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/top_tb/c1">
+   <wvobject type="array" fp_name="/top_layer_1_tb/c1">
       <obj_property name="ElementShortName">c1[31:0]</obj_property>
       <obj_property name="ObjectShortName">c1[31:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/tc_start_tick">
+   <wvobject type="logic" fp_name="/top_layer_1_tb/tc_start_tick">
       <obj_property name="ElementShortName">tc_start_tick</obj_property>
       <obj_property name="ObjectShortName">tc_start_tick</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_tb/tc_done_tick">
+   <wvobject type="logic" fp_name="/top_layer_1_tb/tc_done_tick">
       <obj_property name="ElementShortName">tc_done_tick</obj_property>
       <obj_property name="ObjectShortName">tc_done_tick</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_layer_1_tb/tc_unit/a">
+      <obj_property name="ElementShortName">a[7:0]</obj_property>
+      <obj_property name="ObjectShortName">a[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_layer_1_tb/tc_unit/b">
+      <obj_property name="ElementShortName">b[7:0]</obj_property>
+      <obj_property name="ObjectShortName">b[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_layer_1_tb/tc_unit/acc">
+      <obj_property name="ElementShortName">acc[47:0]</obj_property>
+      <obj_property name="ObjectShortName">acc[47:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/tc_unit/macc_reset">
+      <obj_property name="ElementShortName">macc_reset</obj_property>
+      <obj_property name="ObjectShortName">macc_reset</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/tc_unit/macc_ce">
+      <obj_property name="ElementShortName">macc_ce</obj_property>
+      <obj_property name="ObjectShortName">macc_ce</obj_property>
    </wvobject>
 </wave_config>
