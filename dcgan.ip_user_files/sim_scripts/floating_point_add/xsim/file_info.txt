@@ -1,0 +1,1 @@
+floating_point_add.vhd,vhdl,xil_defaultlib,../../../../dcgan.srcs/sources_1/ip/floating_point_add/sim/floating_point_add.vhd,

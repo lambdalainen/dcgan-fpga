@@ -1,0 +1,4 @@
+vhdl xil_defaultlib  \
+"../../../../dcgan.srcs/sources_1/ip/floating_point_subtract/sim/floating_point_subtract.vhd" \
+
+nosort
