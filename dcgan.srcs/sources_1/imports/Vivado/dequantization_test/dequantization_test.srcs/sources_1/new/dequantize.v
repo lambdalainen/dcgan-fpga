@@ -51,7 +51,7 @@ reg [31:0] s_axis_a_tdata2 = 32'd0;
 wire m_axis_result_tvalid2;
 wire [31:0] m_axis_result_tdata2;
 
-floating_point_0 multiply (
+floating_point_mult multiply (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready),            // output wire s_axis_a_tready
@@ -63,7 +63,7 @@ floating_point_0 multiply (
   .m_axis_result_tdata(m_axis_result_tdata)    // output wire [31 : 0] m_axis_result_tdata
 );
 
-floating_point_1 int32_to_float (
+floating_point_fixed_to_float int32_to_float (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid2),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready2),            // output wire s_axis_a_tready

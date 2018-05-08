@@ -83,7 +83,7 @@ wire m_axis_result_tvalid5;
 wire [31:0] m_axis_result_tdata5;
 
 // x * 2
-floating_point_0 multiply (
+floating_point_mult multiply (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready),            // output wire s_axis_a_tready
@@ -96,7 +96,7 @@ floating_point_0 multiply (
 );
 
 // e ^ (x * 2)
-floating_point_2 exp (
+floating_point_exp exp (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid2),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready2),            // output wire s_axis_a_tready
@@ -106,7 +106,7 @@ floating_point_2 exp (
 );
 
 // e ^ (x * 2) - 1
-floating_point_3 minus_1 (
+floating_point_subtract minus_1 (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid3),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready3),            // output wire s_axis_a_tready
@@ -119,7 +119,7 @@ floating_point_3 minus_1 (
 );
 
 // e ^ (x * 2) + 1
-floating_point_4 plus_1 (
+floating_point_add plus_1 (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid4),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready4),            // output wire s_axis_a_tready
@@ -131,7 +131,7 @@ floating_point_4 plus_1 (
   .m_axis_result_tdata(m_axis_result_tdata4)    // output wire [31 : 0] m_axis_result_tdata
 );
 
-floating_point_5 divide (
+floating_point_divide divide (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid5),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready5),            // output wire s_axis_a_tready

@@ -115,7 +115,7 @@ reg [31:0] s_axis_a_tdata6 = 32'd0;
 wire m_axis_result_tvalid6;
 wire [31:0] m_axis_result_tdata6;
 
-// multiply by w
+// multiply by w, add b
 reg s_axis_a_tvalid7 = 1'b0;
 wire s_axis_a_tready7;
 reg [31:0] s_axis_a_tdata7 = 32'd0;
@@ -124,10 +124,14 @@ reg s_axis_b_tvalid7 = 1'b0;
 wire s_axis_b_tready7;
 reg [31:0] s_axis_b_tdata7 = 32'd0;
 
+reg s_axis_c_tvalid7 = 1'b0;
+wire s_axis_c_tready7;
+reg [31:0] s_axis_c_tdata7 = 32'd0;
+
 wire m_axis_result_tvalid7;
 wire [31:0] m_axis_result_tdata7;
 
-floating_point_0 multiply (
+floating_point_mult multiply (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid0),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready0),            // output wire s_axis_a_tready
@@ -139,7 +143,7 @@ floating_point_0 multiply (
   .m_axis_result_tdata(m_axis_result_tdata0)    // output wire [31 : 0] m_axis_result_tdata
 );
 
-floating_point_1 fixed_to_float (
+floating_point_fixed_to_float fixed_to_float (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid1),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready1),            // output wire s_axis_a_tready
@@ -148,7 +152,7 @@ floating_point_1 fixed_to_float (
   .m_axis_result_tdata(m_axis_result_tdata1)    // output wire [31 : 0] m_axis_result_tdata
 );
 
-floating_point_2 accumulate (
+floating_point_acc accumulate (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid2),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready2),            // output wire s_axis_a_tready
@@ -159,7 +163,7 @@ floating_point_2 accumulate (
   .m_axis_result_tlast(m_axis_result_tlast2)    // output wire m_axis_result_tlast
 );
 
-floating_point_3 divide (
+floating_point_divide divide (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid3),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready3),            // output wire s_axis_a_tready
@@ -171,7 +175,7 @@ floating_point_3 divide (
   .m_axis_result_tdata(m_axis_result_tdata3)    // output wire [31 : 0] m_axis_result_tdata
 );
 
-floating_point_4 minus (
+floating_point_subtract minus (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid4),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready4),            // output wire s_axis_a_tready
@@ -183,7 +187,7 @@ floating_point_4 minus (
   .m_axis_result_tdata(m_axis_result_tdata4)    // output wire [31 : 0] m_axis_result_tdata
 );
 
-floating_point_5 plus (
+floating_point_add plus (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid5),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready5),            // output wire s_axis_a_tready
@@ -195,7 +199,7 @@ floating_point_5 plus (
   .m_axis_result_tdata(m_axis_result_tdata5)    // output wire [31 : 0] m_axis_result_tdata
 );
 
-floating_point_6 inverse_sqrt (
+floating_point_invsqrt inverse_sqrt (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid6),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready6),            // output wire s_axis_a_tready
@@ -204,7 +208,7 @@ floating_point_6 inverse_sqrt (
   .m_axis_result_tdata(m_axis_result_tdata6)    // output wire [31 : 0] m_axis_result_tdata
 );
 
-floating_point_0 multiply2 (
+floating_point_mult_add mult_add (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid7),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready7),            // output wire s_axis_a_tready
@@ -212,6 +216,9 @@ floating_point_0 multiply2 (
   .s_axis_b_tvalid(s_axis_b_tvalid7),            // input wire s_axis_b_tvalid
   .s_axis_b_tready(s_axis_b_tready7),            // output wire s_axis_b_tready
   .s_axis_b_tdata(s_axis_b_tdata7),              // input wire [31 : 0] s_axis_b_tdata
+  .s_axis_c_tvalid(s_axis_c_tvalid7),            // input wire s_axis_c_tvalid
+  .s_axis_c_tready(s_axis_c_tready7),            // output wire s_axis_c_tready
+  .s_axis_c_tdata(s_axis_c_tdata7),              // input wire [31 : 0] s_axis_c_tdata
   .m_axis_result_tvalid(m_axis_result_tvalid7),  // output wire m_axis_result_tvalid
   .m_axis_result_tdata(m_axis_result_tdata7)    // output wire [31 : 0] m_axis_result_tdata
 );
@@ -273,6 +280,8 @@ begin
     s_axis_a_tvalid7 = 1'b0;
     s_axis_b_tdata7 = 32'd0;
     s_axis_b_tvalid7 = 1'b0;
+    s_axis_c_tdata7 = 32'd0;
+    s_axis_c_tvalid7 = 1'b0;
 
     out = {DATA_WIDTH{1'b0}};
     we = 1'b0;
@@ -398,40 +407,34 @@ begin
                         s_axis_b_tdata0 = invstd_reg;
                     end
                 if (m_axis_result_tvalid0)
-                    begin
-                        // multiply: (x - mean) * invstd * weight
-                        s_axis_a_tvalid7 = 1'b1;
-                        s_axis_a_tdata7 = m_axis_result_tdata0;
-                        s_axis_b_tvalid7 = 1'b1;
-                        s_axis_b_tdata7 = weight;
-                    end
-                if (m_axis_result_tvalid7)
-                    begin
-                        // plus: (x - mean) * invstd * weight + bias
-                        s_axis_a_tvalid5 = 1'b1;
-                        s_axis_a_tdata5 = m_axis_result_tdata7;
-                        s_axis_b_tvalid5 = 1'b1;
-                        s_axis_b_tdata5 = bias;
-                    end
-                if (m_axis_result_tvalid5)
-                    begin
-                        we = 1'b1;
-                        out = m_axis_result_tdata5;
-                        addr_wr_next = addr_wr_reg + 1;
-                        if (!m_axis_result_tvalid7) // being a smartass here
-                            begin
-                                if (start_addr + input_plane_size == input_total_size)
-                                    state_next = done;
-                                else
-                                    begin
-                                        start_addr_next = start_addr + input_plane_size;
-                                        addr_rd_next = start_addr_next;
-                                        addr_weight_next = addr_weight_reg + 1;
-                                        addr_bias_next = addr_bias_reg + 1;
-                                        state_next = mean;
-                                    end
-                            end
-                    end
+                        begin
+                            // multiply-add: (x - mean) * invstd * weight + bias
+                            s_axis_a_tvalid7 = 1'b1;
+                            s_axis_a_tdata7 = m_axis_result_tdata0;
+                            s_axis_b_tvalid7 = 1'b1;
+                            s_axis_b_tdata7 = weight;
+                            s_axis_c_tvalid7 = 1'b1;
+                            s_axis_c_tdata7 = bias;
+                        end
+                    if (m_axis_result_tvalid7)
+                        begin
+                            we = 1'b1;
+                            out = m_axis_result_tdata7;
+                            addr_wr_next = addr_wr_reg + 1;
+                            if (!s_axis_a_tvalid7) // being a smartass here
+                                begin
+                                    if (start_addr + input_plane_size == input_total_size)
+                                        state_next = done;
+                                    else
+                                        begin
+                                            start_addr_next = start_addr + input_plane_size;
+                                            addr_rd_next = start_addr_next;
+                                            addr_weight_next = addr_weight_reg + 1;
+                                            addr_bias_next = addr_bias_reg + 1;
+                                            state_next = mean;
+                                        end
+                                end
+                        end
             end
         done:
             begin

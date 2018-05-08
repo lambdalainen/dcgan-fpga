@@ -67,7 +67,7 @@ reg [31:0] s_axis_a_tdata3 = 32'd0;
 wire m_axis_result_tvalid3;
 wire [15:0] m_axis_result_tdata3;
 
-floating_point_0 greater_than (
+floating_point_greater_than greater_than (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready),            // output wire s_axis_a_tready
@@ -79,7 +79,7 @@ floating_point_0 greater_than (
   .m_axis_result_tdata(m_axis_result_tdata)    // output wire [7 : 0] m_axis_result_tdata
 );
 
-floating_point_1 divide (
+floating_point_divide divide (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid2),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready2),            // output wire s_axis_a_tready
@@ -91,7 +91,7 @@ floating_point_1 divide (
   .m_axis_result_tdata(m_axis_result_tdata2)    // output wire [31 : 0] m_axis_result_tdata
 );
 
-floating_point_2 float_to_fixed (
+floating_point_float_to_fixed float_to_fixed (
   .aclk(clk),                                  // input wire aclk
   .s_axis_a_tvalid(s_axis_a_tvalid3),            // input wire s_axis_a_tvalid
   .s_axis_a_tready(s_axis_a_tready3),            // output wire s_axis_a_tready
