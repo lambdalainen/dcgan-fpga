@@ -10,9 +10,9 @@ module dequantize
     input wire start_tick,
     input wire [DATA_WIDTH-1:0] sa_f,
     input wire [DATA_WIDTH-1:0] sb_f,
-    input wire [DATA_WIDTH-1:0] val_i32,
+    input wire [DATA_WIDTH-1:0] in,
     input wire [ADDR_WIDTH-1:0] count,
-    output reg [DATA_WIDTH-1:0] val_f,
+    output reg [DATA_WIDTH-1:0] out,
     output wire [ADDR_WIDTH-1:0] addr_rd,
     output wire [ADDR_WIDTH-1:0] addr_wr,
     output reg we,
@@ -95,7 +95,7 @@ begin
     s_axis_a_tdata2 = 32'd0;
     s_axis_a_tvalid2 = 1'b0;
 
-    val_f = {DATA_WIDTH{1'b0}};
+    out = {DATA_WIDTH{1'b0}};
     we = 1'b0;
     done_tick = 1'b0;
 
@@ -123,7 +123,7 @@ begin
                 if (addr_rd_reg < count)
                     begin
                         s_axis_a_tvalid2 = 1'b1;
-                        s_axis_a_tdata2 = val_i32;
+                        s_axis_a_tdata2 = in;
                         addr_rd_next = addr_rd_reg + 1;
                     end
                 if (m_axis_result_tvalid2)
@@ -136,7 +136,7 @@ begin
                 if (m_axis_result_tvalid)
                     begin
                         we = 1'b1;
-                        val_f = m_axis_result_tdata;
+                        out = m_axis_result_tdata;
                         addr_wr_next = addr_wr_reg + 1;
                         if (!m_axis_result_tvalid2) // being a smartass here
                             state_next = done;
