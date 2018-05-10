@@ -11,7 +11,7 @@ module dequantize
     input wire [DATA_WIDTH-1:0] sa_f,
     input wire [DATA_WIDTH-1:0] sb_f,
     input wire [DATA_WIDTH-1:0] in,
-    input wire [ADDR_WIDTH-1:0] count,
+    input wire [ADDR_WIDTH-1:0] input_total_size,
     output reg [DATA_WIDTH-1:0] out,
     output wire [ADDR_WIDTH-1:0] addr_rd,
     output wire [ADDR_WIDTH-1:0] addr_wr,
@@ -120,7 +120,7 @@ begin
             end
         read:
             begin
-                if (addr_rd_reg < count)
+                if (addr_rd_reg < input_total_size)
                     begin
                         s_axis_a_tvalid2 = 1'b1;
                         s_axis_a_tdata2 = in;

@@ -10,9 +10,9 @@ module quantize
 (
     input wire clk,
     input wire start_tick,
-    input wire [FLOAT_DATA_WIDTH-1:0] val_f,
-    input wire [ADDR_WIDTH-1:0] count,
-    output reg [INT_DATA_WIDTH-1:0] val_i,
+    input wire [FLOAT_DATA_WIDTH-1:0] in,
+    input wire [ADDR_WIDTH-1:0] input_total_size,
+    output reg [INT_DATA_WIDTH-1:0] out,
     output wire [ADDR_WIDTH-1:0] addr_rd,
     output wire [ADDR_WIDTH-1:0] addr_wr,
     output reg we,
@@ -132,7 +132,7 @@ begin
     s_axis_a_tvalid3 = 1'b0;
     s_axis_a_tdata3 = 32'd0;
 
-    val_i = {INT_DATA_WIDTH{1'b0}};
+    out = {INT_DATA_WIDTH{1'b0}};
     we = 1'b0;
     done_tick = 1'b0;
 
@@ -148,13 +148,13 @@ begin
             end
         max:
             begin
-                if (addr_rd_reg < count)
+                if (addr_rd_reg < input_total_size)
                     begin
                         s_axis_a_tvalid = 1'b1;
-                        s_axis_a_tdata = val_f;
+                        s_axis_a_tdata = in;
                         s_axis_b_tvalid = 1'b1;
                         s_axis_b_tdata = max_reg;
-                        saved_next = val_f;
+                        saved_next = in;
                         addr_rd_next = addr_rd_reg + 1;
                     end
                  else if (!m_axis_result_tvalid) // comparison ended
@@ -181,10 +181,10 @@ begin
             end
         run:
             begin
-                if (addr_rd_reg < count)
+                if (addr_rd_reg < input_total_size)
                     begin
                         s_axis_a_tvalid2 = 1'b1;
-                        s_axis_a_tdata2 = val_f;
+                        s_axis_a_tdata2 = in;
                         s_axis_b_tvalid2 = 1'b1;
                         s_axis_b_tdata2 = scale_reg;
                         addr_rd_next = addr_rd_reg + 1;
@@ -197,7 +197,7 @@ begin
                 if (m_axis_result_tvalid3)
                     begin
                         we = 1'b1;
-                        val_i = m_axis_result_tdata3[INT_DATA_WIDTH-1:0];
+                        out = m_axis_result_tdata3[INT_DATA_WIDTH-1:0];
                         addr_wr_next = addr_wr_reg + 1;
                         if (!m_axis_result_tvalid2) // being a smartass here
                             state_next = done;
