@@ -3,7 +3,7 @@
 module batchnorm
 #(
     parameter ADDR_WIDTH = 16, // 2^16 = 65536
-              WB_ADDR_WIDTH = 2,
+              WB_ADDR_WIDTH = 10,
               DATA_WIDTH = 32
 )
 (

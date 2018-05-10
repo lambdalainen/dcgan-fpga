@@ -11,19 +11,20 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="1477720000000fs"></ZoomStartTime>
-      <ZoomEndTime time="1506270000001fs"></ZoomEndTime>
-      <Cursor1Time time="1540560000000fs"></Cursor1Time>
+      <ZoomStartTime time="922993066667fs"></ZoomStartTime>
+      <ZoomEndTime time="923091666668fs"></ZoomEndTime>
+      <Cursor1Time time="923050667000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="175"></NameColumnWidth>
-      <ValueColumnWidth column_width="98"></ValueColumnWidth>
+      <NameColumnWidth column_width="257"></NameColumnWidth>
+      <ValueColumnWidth column_width="94"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="24" />
+   <WVObjectSize size="32" />
    <wave_markers>
+      <marker label="" time="1575990000000" />
+      <marker label="" time="1578360000000" />
       <marker label="" time="923009500000" />
       <marker label="" time="1559500000000" />
-      <marker label="" time="1575990000000" />
    </wave_markers>
    <wvobject type="logic" fp_name="/top_layer_1_tb/clk">
       <obj_property name="ElementShortName">clk</obj_property>
@@ -33,10 +34,6 @@
       <obj_property name="ElementShortName">btn_tick</obj_property>
       <obj_property name="ObjectShortName">btn_tick</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_layer_1_tb/read_spi_tick">
-      <obj_property name="ElementShortName">read_spi_tick</obj_property>
-      <obj_property name="ObjectShortName">read_spi_tick</obj_property>
-   </wvobject>
    <wvobject type="array" fp_name="/top_layer_1_tb/state">
       <obj_property name="ElementShortName">state[2:0]</obj_property>
       <obj_property name="ObjectShortName">state[2:0]</obj_property>
@@ -45,25 +42,17 @@
       <obj_property name="ElementShortName">output_plane_start[9:0]</obj_property>
       <obj_property name="ObjectShortName">output_plane_start[9:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_layer_1_tb/i_wb_cyc">
-      <obj_property name="ElementShortName">i_wb_cyc</obj_property>
-      <obj_property name="ObjectShortName">i_wb_cyc</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/top_layer_1_tb/o_wb_ack">
-      <obj_property name="ElementShortName">o_wb_ack</obj_property>
-      <obj_property name="ObjectShortName">o_wb_ack</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/top_layer_1_tb/start_tick_cv">
-      <obj_property name="ElementShortName">start_tick_cv</obj_property>
-      <obj_property name="ObjectShortName">start_tick_cv</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/top_layer_1_tb/done_tick_cv">
-      <obj_property name="ElementShortName">done_tick_cv</obj_property>
-      <obj_property name="ObjectShortName">done_tick_cv</obj_property>
-   </wvobject>
    <wvobject type="logic" fp_name="/top_layer_1_tb/we_input">
       <obj_property name="ElementShortName">we_input</obj_property>
       <obj_property name="ObjectShortName">we_input</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/we_weight">
+      <obj_property name="ElementShortName">we_weight</obj_property>
+      <obj_property name="ObjectShortName">we_weight</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/we_output">
+      <obj_property name="ElementShortName">we_output</obj_property>
+      <obj_property name="ObjectShortName">we_output</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/top_layer_1_tb/input_wr">
       <obj_property name="ElementShortName">input_wr[7:0]</obj_property>
@@ -73,10 +62,6 @@
       <obj_property name="ElementShortName">input_rd[7:0]</obj_property>
       <obj_property name="ObjectShortName">input_rd[7:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_layer_1_tb/we_weight">
-      <obj_property name="ElementShortName">we_weight</obj_property>
-      <obj_property name="ObjectShortName">we_weight</obj_property>
-   </wvobject>
    <wvobject type="array" fp_name="/top_layer_1_tb/weight_wr">
       <obj_property name="ElementShortName">weight_wr[7:0]</obj_property>
       <obj_property name="ObjectShortName">weight_wr[7:0]</obj_property>
@@ -85,9 +70,13 @@
       <obj_property name="ElementShortName">weight_rd[7:0]</obj_property>
       <obj_property name="ObjectShortName">weight_rd[7:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/top_layer_1_tb/we_output">
-      <obj_property name="ElementShortName">we_output</obj_property>
-      <obj_property name="ObjectShortName">we_output</obj_property>
+   <wvobject type="array" fp_name="/top_layer_1_tb/addr_output_rw">
+      <obj_property name="ElementShortName">addr_output_rw[15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_output_rw[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top_layer_1_tb/addr_output_rd">
+      <obj_property name="ElementShortName">addr_output_rd[15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_output_rd[15:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/top_layer_1_tb/output_wr">
       <obj_property name="ElementShortName">output_wr[31:0]</obj_property>
@@ -96,14 +85,6 @@
    <wvobject type="array" fp_name="/top_layer_1_tb/output_rd1">
       <obj_property name="ElementShortName">output_rd1[31:0]</obj_property>
       <obj_property name="ObjectShortName">output_rd1[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/top_layer_1_tb/start_tick_tc">
-      <obj_property name="ElementShortName">start_tick_tc</obj_property>
-      <obj_property name="ObjectShortName">start_tick_tc</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/top_layer_1_tb/done_tick_tc">
-      <obj_property name="ElementShortName">done_tick_tc</obj_property>
-      <obj_property name="ObjectShortName">done_tick_tc</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/top_layer_1_tb/tc_unit/acc">
       <obj_property name="ElementShortName">acc[47:0]</obj_property>
@@ -120,5 +101,57 @@
    <wvobject type="array" fp_name="/top_layer_1_tb/tc_unit/c_im">
       <obj_property name="ElementShortName">c_im[9:0]</obj_property>
       <obj_property name="ObjectShortName">c_im[9:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/start_tick_cv">
+      <obj_property name="ElementShortName">start_tick_cv</obj_property>
+      <obj_property name="ObjectShortName">start_tick_cv</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/done_tick_cv">
+      <obj_property name="ElementShortName">done_tick_cv</obj_property>
+      <obj_property name="ObjectShortName">done_tick_cv</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/start_tick_tc">
+      <obj_property name="ElementShortName">start_tick_tc</obj_property>
+      <obj_property name="ObjectShortName">start_tick_tc</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/done_tick_tc">
+      <obj_property name="ElementShortName">done_tick_tc</obj_property>
+      <obj_property name="ObjectShortName">done_tick_tc</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/start_tick_bn_relu">
+      <obj_property name="ElementShortName">start_tick_bn_relu</obj_property>
+      <obj_property name="ObjectShortName">start_tick_bn_relu</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/done_tick_bn_relu">
+      <obj_property name="ElementShortName">done_tick_bn_relu</obj_property>
+      <obj_property name="ObjectShortName">done_tick_bn_relu</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/dq_bn_relu_q_unit/start_tick_dq">
+      <obj_property name="ElementShortName">start_tick_dq</obj_property>
+      <obj_property name="ObjectShortName">start_tick_dq</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/dq_bn_relu_q_unit/done_tick_dq">
+      <obj_property name="ElementShortName">done_tick_dq</obj_property>
+      <obj_property name="ObjectShortName">done_tick_dq</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/dq_bn_relu_q_unit/start_tick_bn">
+      <obj_property name="ElementShortName">start_tick_bn</obj_property>
+      <obj_property name="ObjectShortName">start_tick_bn</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/dq_bn_relu_q_unit/done_tick_bn">
+      <obj_property name="ElementShortName">done_tick_bn</obj_property>
+      <obj_property name="ObjectShortName">done_tick_bn</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/dq_bn_relu_q_unit/start_tick_relu">
+      <obj_property name="ElementShortName">start_tick_relu</obj_property>
+      <obj_property name="ObjectShortName">start_tick_relu</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/dq_bn_relu_q_unit/done_tick_relu">
+      <obj_property name="ElementShortName">done_tick_relu</obj_property>
+      <obj_property name="ObjectShortName">done_tick_relu</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top_layer_1_tb/dq_bn_relu_q_unit/start_tick_q">
+      <obj_property name="ElementShortName">start_tick_q</obj_property>
+      <obj_property name="ObjectShortName">start_tick_q</obj_property>
    </wvobject>
 </wave_config>

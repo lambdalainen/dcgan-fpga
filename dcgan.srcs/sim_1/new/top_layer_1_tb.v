@@ -51,22 +51,22 @@ reg start_tick_cv = 1'b0;
 wire done_tick_cv;
 
 // transconv
-reg we_input = 1'b0;
+wire we_input;
 reg we_weight = 1'b0;
-wire we_output; // we can't write 'wire we_c = 1'b0;' or 'we_c' will be tied to GND
+wire we_output, we_output_tc, we_output_bn_relu; // can't write 'wire we = 1'b0;' or 'we' will be tied to GND
 
 wire [15:0] addr_input_rd, addr_input_rd_col_vec, addr_input_rd_tc;
 wire [15:0] addr_input_wr;
 reg [15:0] addr_weight_wr = 16'hffff;
 wire [15:0] addr_weight_rd;
-wire [15:0] addr_output_rw;
-reg [15:0] addr_output_rd = 16'd0;
+wire [15:0] addr_output_rw, addr_output_rw_tc, addr_output_rw_bn_relu;
+wire [15:0] addr_output_rd, addr_output_rd_bn_relu;
+reg [15:0] addr_output_rd_testbench = 16'd0;
 
-reg [7:0] input_wr = 8'd0;
-wire [7:0] input_rd;
+wire [7:0] input_wr, input_rd;
 reg [7:0] weight_wr = 8'd0;
 wire [7:0] weight_rd;
-wire [31:0] output_wr, output_rd0;
+wire [31:0] output_wr, output_wr_tc, output_wr_bn_relu, output_rd0;
 wire [31:0] output_rd1;
 
 reg start_tick_tc = 1'b0;
@@ -115,16 +115,31 @@ col_vec col_vec_unit
      .a(input_rd), .a_rd_addr(addr_input_rd_col_vec), .addr_cvw(addr_cv0), .val(cvw), .we(we_cv), .done_tick(done_tick_cv));
 
 // TODO: pass constants as parameters?
+// original: n = 512 x 4 x 4, in the testbench only do 2 instead of 512, so n = 32
 transconv tc_unit
-    (.clk(clk), .reset(reset), .start_tick(start_tick_tc), .m(14'd1), .k(14'd100), .n(14'd8192),
+    (.clk(clk), .reset(reset), .start_tick(start_tick_tc), .m(14'd1), .k(14'd100), .n(14'd32),
      .n_output_plane(10'd2), .output_plane_start(output_plane_start), .output_plane_batch_size(10'd1),
      .output_h(7'd4), .output_w(7'd4), .input_h(7'd1), .input_w(7'd1),
      .kernel_h(3'd4), .kernel_w(3'd4), .pad_h(3'd0), .pad_w(3'd0),
      .stride_h(3'd1), .stride_w(3'd1), .dilation_h(3'd1), .dilation_w(3'd1),
-     .a(input_rd), .b(weight_rd), .c(output_rd0), .rv(rv0), .cv(cv1), .term4(32'd1779200), .bias(tc_bias),
-     .a_rd_addr(addr_input_rd_tc), .b_rd_addr(addr_weight_rd), .c_rw_addr(addr_output_rw),
+     .a(input_rd), .b(weight_rd), .c(output_rd0), .rv(rv0), .cv(cv1), .term4(32'd1723600), .bias(tc_bias),
+     .a_rd_addr(addr_input_rd_tc), .b_rd_addr(addr_weight_rd), .c_rw_addr(addr_output_rw_tc),
      .addr_rv(addr_rv0), .addr_cv(addr_cv1), .addr_bias(addr_tc_bias),
-     .c_out(output_wr), .c_wr_en(we_output), .done_tick(done_tick_tc));
+     .c_out(output_wr_tc), .c_wr_en(we_output_tc), .done_tick(done_tick_tc));
+
+dq_bn_relu_q dq_bn_relu_q_unit
+    (.clk(clk), .start_tick(start_tick_bn_relu), .sa_f(32'h3cebbba5), .sb_f(32'h3b8a47ed), .in(output_rd1),
+     .input_total_size(16'd32),
+     .input_plane_size(16'd16),
+     .out32(output_wr_bn_relu),
+     .out8(input_wr),
+     .addr_output_rd(addr_output_rd_bn_relu),
+     .addr_output_wr(addr_output_rw_bn_relu),
+     .addr_input_wr(addr_input_wr),
+     .we_output(we_output_bn_relu),
+     .we_input(we_input),
+     .done_tick(done_tick_bn_relu)
+);
 
 wbqspiflash wbqspiflash_unit(.i_clk(clk),
 		// Internal wishbone connections
@@ -152,9 +167,20 @@ s25fl128s spi_flash (.SI(o_qspi_dat[0]), .SO(i_qspi_dat[1]), .SCK(o_qspi_sck),
                      .CSNeg(o_qspi_cs_n), .RSTNeg(), .WPNeg(), .HOLDNeg());
 
 // --- Multiplexers
-
-//assign addr_input_wr =
 assign addr_input_rd = state == col_vec ? addr_input_rd_col_vec : addr_input_rd_tc;
+
+assign we_output =
+    state == transconv ? we_output_tc :
+    state == bn_relu ? we_output_bn_relu : 1'b0;
+assign addr_output_rw =
+    state == transconv ? addr_output_rw_tc :
+    state == bn_relu ? addr_output_rw_bn_relu : 16'd0;
+assign addr_output_rd =
+    state == idle ? addr_output_rd_testbench :
+    state == bn_relu ? addr_output_rd_bn_relu : 16'd0;
+assign output_wr =
+    state == transconv ? output_wr_tc :
+    state == bn_relu ? output_wr_bn_relu : 16'd0;
 
 always @(posedge clk)
 begin
@@ -219,7 +245,7 @@ begin
 
                 if (load_byte == 3) // finished the 4 bytes
                     begin
-                        if (weight_bytes_loaded == 1600) // finished loading weights for this batch
+                        if (weight_bytes_loaded == 1600) // finished loading weights for this batch: 100 x 4 x 4
                             begin
                                 state <= transconv;
                                 weight_bytes_loaded <= 0;
@@ -246,7 +272,18 @@ begin
                                 i_wb_addr <= i_wb_addr + 1; // not +4!
                             end
                         else
-                            state <= idle;
+                            begin
+                                state <= bn_relu;
+                                start_tick_bn_relu <= 1'b1;
+                            end
+                    end
+            end
+        bn_relu:
+            begin
+                start_tick_bn_relu <= 1'b0;
+                if (done_tick_bn_relu)
+                    begin
+                        state <= idle;
                     end
             end
     endcase
@@ -284,7 +321,7 @@ begin
 
     for (i = 0; i < 31; i = i+1) begin
         @(negedge clk);
-        addr_output_rd = addr_output_rd + 1;
+        addr_output_rd_testbench = addr_output_rd_testbench + 1;
     end
 end
 
