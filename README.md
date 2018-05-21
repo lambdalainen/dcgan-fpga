@@ -15,6 +15,10 @@ To simulate the first transposed convolutional layer:
 
 Explaination of waveforms:
 
-The input is 1x100 contained in input_1_uint8.mem. A single kernel is of size 100x4x4, and weight_1_fpga.mem contains 512 such kernels, therefore in total there should be 512 output planes (channels). In this testbench, we calculate only the first 2 output planes from the first 2 kernels. This is done by reading each kernel (100x4x4) from the Quad-SPI Flash (s25fl128s.v), followed by calculating the transposed convolution. This process can be seen in the following waveform, in which 2 reads of the kernel take up most of the cycles.
+The input is 1x100 contained in input_1_uint8.mem. A single kernel is of size 100x4x4, and weight_1_fpga.mem contains 512 such kernels, therefore in total there should be 512 output planes (channels). In this testbench, we calculate only the first 2 output planes from the first 2 kernels. This is done by reading each kernel (100x4x4) from the Quad-SPI Flash (s25fl128s.v), followed by calculating the transposed convolution. This process can be seen in the following waveform, in which 2 reads of the kernels take up most of the clock cycles.
 
 ![Transposed convolution testbench waveform 0](https://github.com/lambdalainen/dcgan-fpga/raw/master/screenshots/testbench0.png "Transposed convolution testbench waveform 0")
+
+Once `tc_done_tick` is asserted, the testbench proceeds to print the first 32 values of the output.
+
+![Transposed convolution testbench waveform 1](https://github.com/lambdalainen/dcgan-fpga/raw/master/screenshots/testbench1.png "Transposed convolution testbench waveform 1")
