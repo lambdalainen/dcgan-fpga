@@ -19,6 +19,6 @@ The input is 1x100 contained in input_1_uint8.mem. A single kernel is of size 10
 
 ![Transposed convolution testbench waveform 0](https://github.com/lambdalainen/dcgan-fpga/raw/master/screenshots/testbench0.png "Transposed convolution testbench waveform 0")
 
-Once `tc_done_tick` is asserted, the testbench proceeds to read the first 32 values of the output.
+Once `tc_done_tick` is asserted for the second output plane, the testbench proceeds to read the first 32 values of the output.
 
 ![Transposed convolution testbench waveform 1](https://github.com/lambdalainen/dcgan-fpga/raw/master/screenshots/testbench1.png "Transposed convolution testbench waveform 1")
