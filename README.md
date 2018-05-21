@@ -6,7 +6,7 @@ DCGAN implementation on Nexys 4 with Artix-7 FPGA (XC7A100T-CSG324)
 
 To simulate the first transposed convolutional layer:
 
-1. First, clone the repository: `git clone git@github.com:lambdalainen/dcgan-fpga.git`
+1. First, clone the repository: `git clone https://github.com/lambdalainen/dcgan-fpga.git`
 2. Switch to the commit that completes the simulation of the first layer: `git checkout 253231882df6cb7ccf4c6933179ac1d4784241b5`
 3. Open the project with Vivado
 4. Edit s25fl128s.v, on line 250, change the .mem file to "weight_1_fpga.mem"
